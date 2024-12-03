@@ -26,16 +26,30 @@
 (defn calculate-similarity-score
   [left-list right-list]
   (let [right-counts (count-occurrences right-list)]
-    (reduce (fn [score num]
-              (+ score (* num (get right-counts num 0))))
-            0
-            left-list)))
+    (reduce (partial accumulate-similarity right-counts) 0 left-list)))
 
-(let [input-file "input"
-      rows (parse-tsv input-file)
-      left-list (map first rows)
-      right-list (map second rows)
-      total-distance (calculate-total-distance rows)
-      total-similarity (calculate-similarity-score left-list right-list)]
-  (println total-distance)
-  (println total-similarity))
+(defn calculate-total-distance
+  [rows]
+  (let [columns (apply map vector rows)
+        sorted-cols (mapv sort columns)]
+    (reduce calculate-pair-distance 0
+            (map vector (first sorted-cols) (second sorted-cols)))))
+
+(defn process-data
+  [input-file]
+  (let [rows (parse-tsv input-file)
+        left-list (mapv first rows)
+        right-list (mapv second rows)
+        total-distance (calculate-total-distance rows)
+        total-similarity (calculate-similarity-score left-list right-list)]
+    {:total-distance total-distance
+     :total-similarity total-similarity}))
+
+(defn -main
+  []
+  (let [input-file "input"
+        {:keys [total-distance total-similarity]} (process-data input-file)]
+    (println total-distance)
+    (println total-similarity)))
+
+(-main)
