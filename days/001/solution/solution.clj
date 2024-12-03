@@ -17,7 +17,11 @@
 
 (defn count-occurrences
   [lst]
-  (reduce (fn [acc x] (update acc x (fnil inc 0))) {} lst))
+  (frequencies lst))
+
+(defn accumulate-similarity
+  [right-counts score num]
+  (+ score (* num (get right-counts num 0))))
 
 (defn calculate-similarity-score
   [left-list right-list]
