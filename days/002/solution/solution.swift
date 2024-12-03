@@ -16,14 +16,30 @@ func isSafeReport(_ levels: [Int]) -> Bool {
     return true
 }
 
-func countSafeReports(fromFile filePath: String) -> Int? {
+func isSafeWithDampener(_ levels: [Int]) -> Bool {
+    if isSafeReport(levels) {
+        return true
+    }
+
+    for i in 0..<levels.count {
+        var modifiedLevels = levels
+        modifiedLevels.remove(at: i)
+        if isSafeReport(modifiedLevels) {
+            return true
+        }
+    }
+
+    return false
+}
+
+func countSafeReports(fromFile filePath: String, useDampener: Bool) -> Int? {
     do {
         let fileContent = try String(contentsOfFile: filePath, encoding: .utf8)
         let reports = fileContent.split(separator: "\n").map { String($0) }
         var safeReportCount = 0
         for report in reports {
             let levels = report.split(separator: " ").compactMap { Int($0) }
-            if isSafeReport(levels) {
+            if useDampener ? isSafeWithDampener(levels) : isSafeReport(levels) {
                 safeReportCount += 1
             }
         }
@@ -35,4 +51,5 @@ func countSafeReports(fromFile filePath: String) -> Int? {
 }
 
 let filePath = "input"
-print("\(countSafeReports(fromFile: filePath)!)")
+print("\(countSafeReports(fromFile: filePath, useDampener: false)!)")
+print("\(countSafeReports(fromFile: filePath, useDampener: true)!)")
