@@ -11,15 +11,9 @@
   (with-open [reader (io/reader filepath)]
     (doall (map parse-line (line-seq reader)))))
 
-(defn calculate-total-distance
-  [rows]
-  (let [columns (apply map vector rows)
-        sorted-cols (map #(sort %) columns)]
-    (reduce
-     (fn [total-dist pair]
-       (+ total-dist (Math/abs (- (first pair) (second pair)))))
-     0
-     (map vector (first sorted-cols) (second sorted-cols)))))
+(defn calculate-pair-distance
+  [total-dist pair]
+  (+ total-dist (Math/abs (- (first pair) (second pair)))))
 
 (defn count-occurrences
   [lst]
