@@ -2,6 +2,10 @@
   (:require [clojure.string :as str]
             [clojure.java.io :as io]))
 
+(defn parse-line
+  [line]
+  (mapv #(Integer/parseInt %) (str/split line #"\s+")))
+
 (defn parse-tsv
   [filepath]
   (with-open [reader (io/reader filepath)]
