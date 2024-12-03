@@ -9,10 +9,7 @@
 (defn parse-tsv
   [filepath]
   (with-open [reader (io/reader filepath)]
-    (doall
-     (map (fn [line]
-            (map #(Integer/parseInt %) (str/split line #" +")))
-          (line-seq reader)))))
+    (doall (map parse-line (line-seq reader)))))
 
 (defn calculate-total-distance
   [rows]
