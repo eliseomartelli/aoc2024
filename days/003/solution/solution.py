@@ -30,21 +30,22 @@ with open("input", "r") as file:
         )
     )
 
-    file.seek(0)
-
-    instructions = re.findall(pattern, file.read())
-    print(
-        sum(
-            int(x[2]) * int(x[3]) * e if x[2] and x[3] else 0
-            for x, e in zip(
-                instructions,
-                toggle(
-                    (
-                        1
-                        if instr[0]
-                        else -1
-                        if instr[1]
-                        else 0
+        reduce(
+            add,
+            map(
+                lambda x:
+                    int(x[0][2]) * int(x[0][3]) * x[1]
+                    if x[0][2] and x[0][3] else 0,
+                zip(
+                    instructions,
+                    toggle(
+                        (
+                            1 if instr[0] else -1 if instr[1] else 0
+                            for instr in instructions
+                        ),
+                        initial=1
+                    )
+                    )
                         for instr in instructions
                     ),
                     initial=1
