@@ -5,6 +5,19 @@ import re
 
 pattern = r"(do\(\))|(don't\(\))|mul\((\d+),(\d+)\)"
 
+
+def toggle(iterable, initial=None):
+    total = initial
+    it = iter(iterable)
+    for item in it:
+        total = total + item
+        if total > 1:
+            total = 1
+        elif total < 0:
+            total = 0
+        yield total
+
+
 with open("input", "r") as file:
     print(
         reduce(
