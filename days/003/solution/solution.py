@@ -8,13 +8,9 @@ pattern = r"(do\(\))|(don't\(\))|mul\((\d+),(\d+)\)"
 
 def toggle(iterable, initial=None):
     total = initial
-    it = iter(iterable)
-    for item in it:
-        total = total + item
-        if total > 1:
-            total = 1
-        elif total < 0:
-            total = 0
+    for item in iterable:
+        total += item
+        total = max(0, min(1, total))
         yield total
 
 
@@ -30,6 +26,10 @@ with open("input", "r") as file:
         )
     )
 
+    file.seek(0)
+
+    instructions = re.findall(pattern, file.read())
+    print(
         reduce(
             add,
             map(
@@ -43,13 +43,9 @@ with open("input", "r") as file:
                             1 if instr[0] else -1 if instr[1] else 0
                             for instr in instructions
                         ),
-                        initial=1
+                        initial=1,
                     )
                     )
-                        for instr in instructions
-                    ),
-                    initial=1
-                )
             )
         )
     )
