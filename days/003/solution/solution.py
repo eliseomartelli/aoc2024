@@ -33,17 +33,22 @@ with open("input", "r") as file:
     file.seek(0)
 
     instructions = re.findall(pattern, file.read())
-
-    enabled = True
-    results = []
-
-    for instr in instructions:
-        if instr[0]:
-            enabled = True
-        if instr[1]:
-            enabled = False
-
-        if enabled and instr[2] and instr[3]:
-            results.append(int(instr[2]) * int(instr[3]))
-
-    print(sum(results))
+    print(
+        sum(
+            int(x[2]) * int(x[3]) * e if x[2] and x[3] else 0
+            for x, e in zip(
+                instructions,
+                toggle(
+                    (
+                        1
+                        if instr[0]
+                        else -1
+                        if instr[1]
+                        else 0
+                        for instr in instructions
+                    ),
+                    initial=1
+                )
+            )
+        )
+    )
